@@ -40,7 +40,6 @@ resource "oci_core_instance" "bastion_rgn1" {
     source_type = "image"
     
     boot_volume_size_in_gbs = 50
-    # kms_key_id = oci_kms_key.test_key.id
   }
   preserve_boot_volume = false
   
@@ -86,11 +85,6 @@ resource "oci_core_instance" "consul_1_rgn1" {
   # }
   metadata = {
     ssh_authorized_keys = local.ssh_pub_keys
-    # user_data = base64encode(templatefile("${path.module}/scripts/dns.tpl", {
-    #   dns_mappings     = var.dns_namespace_mappings != null ? var.dns_namespace_mappings : [] # local.dns_mappings
-    #   rev_dns_mappings = var.reverse_dns_mappings != null ? var.reverse_dns_mappings : []     # local.rev_dns_mappings
-    #   vcn_cidr         = local.vcn_cidr
-    # }))
   }
   source_details {
     source_id = local.list_images[var.compute_image_name].id
@@ -223,11 +217,6 @@ resource "oci_core_instance" "consul_2_rgn1" {
   # }
   metadata = {
     ssh_authorized_keys = local.ssh_pub_keys
-    # user_data = base64encode(templatefile("${path.module}/scripts/dns.tpl", {
-    #   dns_mappings     = var.dns_namespace_mappings != null ? var.dns_namespace_mappings : [] # local.dns_mappings
-    #   rev_dns_mappings = var.reverse_dns_mappings != null ? var.reverse_dns_mappings : []     # local.rev_dns_mappings
-    #   vcn_cidr         = local.vcn_cidr
-    # }))
   }
   source_details {
     source_id = local.list_images[var.compute_image_name].id
@@ -367,7 +356,6 @@ resource "oci_core_instance" "consul_3_rgn1" {
     source_type = "image"
     
     boot_volume_size_in_gbs = 50
-    # kms_key_id = oci_kms_key.test_key.id
   }
   preserve_boot_volume = false
   
@@ -505,7 +493,6 @@ resource "oci_core_instance" "cts_rgn1" {
     source_type = "image"
     
     boot_volume_size_in_gbs = 50
-    # kms_key_id = oci_kms_key.test_key.id
   }
   preserve_boot_volume = false
   
@@ -577,30 +564,11 @@ resource "oci_core_instance" "cts_rgn1" {
   }
   
   provisioner "file" {
-    content     = templatefile("${path.module}/scripts/consul_client_install.sh", {
-      ssh_priv_key = tls_private_key.node_to_node.private_key_pem
-      consul_nodes = local.region1_consul_ips
-      consul_region = "region1"
-    })
-    destination = "/tmp/install_consul.sh"
-    
-    connection {
-      type     = "ssh"
-      user     = "opc"
-      private_key = local.ssh_priv_key
-      host     = self.private_ip
-      bastion_host = oci_core_instance.bastion_rgn1.public_ip
-      bastion_port = 22
-      bastion_user = "opc"
-      bastion_private_key = local.ssh_priv_key
-    }
-  }
-  
-  provisioner "file" {
     content     = templatefile("${path.module}/scripts/cts_install.sh", {
       region = var.region_1
       lb_id = oci_load_balancer_load_balancer.pub_rgn1.id
       be_set_name = oci_load_balancer_backend_set.web_rgn1.name
+      consul_nodes = local.region1_consul_ips
     })
     destination = "/tmp/install_cts.sh"
     

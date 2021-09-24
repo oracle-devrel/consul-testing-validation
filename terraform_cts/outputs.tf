@@ -15,3 +15,7 @@ output "lb_id" {
 output "be_set_name" {
   value = oci_load_balancer_backend_set.web_rgn1.name
 }
+
+output "cts_priv_ip" {
+  value = oci_core_instance.cts_rgn1.private_ip
+}
