@@ -58,8 +58,6 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [oci_bastion_bastion.rgn1](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/bastion_bastion) | resource |
-| [oci_bastion_session.consul_1_rgn1](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/bastion_session) | resource |
 | [oci_core_dhcp_options.rgn1](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/core_dhcp_options) | resource |
 | [oci_core_instance.bastion_rgn1](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/core_instance) | resource |
 | [oci_core_instance.consul_1_rgn1](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/core_instance) | resource |

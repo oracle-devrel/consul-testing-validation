@@ -14,6 +14,7 @@ Here's a quick summary of what's deployed:
 * A bastion (it's not a proper, hardened bastion - it's really just an instance that can be SSH'd to)
 * 1+ web servers (added to the LB Backend Set)
 * A public LB, which is accessible by a public IP address (it's highly recommended to limit it to your own public IP address, as the LB does not use any encryption)
+* A server running CTS (and Consul in client mode)
 
 ## Getting Started
 ### Sensitive Values to Record
@@ -33,6 +34,53 @@ You may visit the LB by going to the public IP in your web browser.  Note that t
 
 ### Prerequisites
 You must have an OCI account.  [Click here](https://www.oracle.com/cloud/free/?source=:ow:o:s:nav::DevoGetStarted&intcmp=:ow:o:s:nav::DevoGetStarted) to create a new cloud account.
+
+## CTS Specifics
+The `cts` instance will automatically add/remove web servers to the OCI LB, as web servers are added or removed.  To see this in action, change the number of `num_web_svrs` variable (increase it, apply, then look at the LB backend... decrease it, apply, then look at the LB backend).
+
+The CTS web task is configured in the `scripts/cts_install.sh` script (placed in `/etc/consul-cts.d/cts.hcl` on the CTS instance):
+
+```
+task {
+  name        = "web"
+  description = "CTS on OCI example"
+  source      = "oracle-devrel/cts-example/oci"
+  version     = "0.1.1"
+  services    = ["web"]
+  variable_files = [
+    "/etc/consul-cts.d/web.tfvars"
+  ]
+}
+```
+
+The `/etc/consul-cts.d/web.tfvars` file contains several inputs that are needed by the `cts-example` module:
+
+```
+region = "${region}"
+lb_id = "${lb_id}"
+be_set_name = "${be_set_name}"
+```
+
+These are passed into the `file` provisioner (found in the `cts_rgn1` `oci_core_instance` resource definition, in `compute.tf`) so they're accessible within the file provisioner:
+
+```
+  ...
+  provisioner "file" {
+    content     = templatefile("${path.module}/scripts/cts_install.sh", {
+      region = var.region_1
+      lb_id = oci_load_balancer_load_balancer.pub_rgn1.id
+      be_set_name = oci_load_balancer_backend_set.web_rgn1.name
+      consul_nodes = local.region1_consul_ips
+    })
+    destination = "/tmp/install_cts.sh"
+    ...
+```
+
+This way we values can be passed about the infrastructure that the CTS module will need to successfully add/remove Backends to the LB Backend Set.
+
+Instance Principals are used to grant the CTS instance privileges to manage the LB.
+
+CTS is configured to use Consul for the TF State (see the `driver "terraform"` block in `/etc/consul-cts.d/cts.hcl` on the `cts` instance).
 
 ## Requirements
 
@@ -71,6 +119,7 @@ No modules.
 | [oci_core_network_security_group.consul_rgn1](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/core_network_security_group) | resource |
 | [oci_core_network_security_group.lb_rgn1](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/core_network_security_group) | resource |
 | [oci_core_network_security_group.web_rgn1](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/core_network_security_group) | resource |
+| [oci_core_network_security_group_security_rule.consul_to_tcp_443](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/core_network_security_group_security_rule) | resource |
 | [oci_core_network_security_group_security_rule.e_to_consul_8500](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/core_network_security_group_security_rule) | resource |
 | [oci_core_network_security_group_security_rule.e_to_consul_rgn1](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/core_network_security_group_security_rule) | resource |
 | [oci_core_network_security_group_security_rule.e_to_consul_ssh](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/core_network_security_group_security_rule) | resource |
@@ -87,9 +136,10 @@ No modules.
 | [oci_core_subnet.mgmt_rgn1](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/core_subnet) | resource |
 | [oci_core_vcn.rgn1](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/core_vcn) | resource |
 | [oci_identity_compartment.consul](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/identity_compartment) | resource |
+| [oci_identity_dynamic_group.cts](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/identity_dynamic_group) | resource |
+| [oci_identity_policy.cts](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/identity_policy) | resource |
 | [oci_identity_tag.release](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/identity_tag) | resource |
 | [oci_identity_tag_namespace.devrel](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/identity_tag_namespace) | resource |
-| [oci_load_balancer_backend.rgn1](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/load_balancer_backend) | resource |
 | [oci_load_balancer_backend_set.web_rgn1](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/load_balancer_backend_set) | resource |
 | [oci_load_balancer_listener.web_rgn1](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/load_balancer_listener) | resource |
 | [oci_load_balancer_load_balancer.pub_rgn1](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/load_balancer_load_balancer) | resource |
@@ -130,6 +180,7 @@ No modules.
 |------|-------------|
 | <a name="output_bastion_pub_ip"></a> [bastion\_pub\_ip](#output\_bastion\_pub\_ip) | n/a |
 | <a name="output_be_set_name"></a> [be\_set\_name](#output\_be\_set\_name) | n/a |
+| <a name="output_cts_priv_ip"></a> [cts\_priv\_ip](#output\_cts\_priv\_ip) | n/a |
 | <a name="output_lb_id"></a> [lb\_id](#output\_lb\_id) | n/a |
 | <a name="output_rgn1_lb_pub_ip"></a> [rgn1\_lb\_pub\_ip](#output\_rgn1\_lb\_pub\_ip) | n/a |
 
@@ -140,6 +191,9 @@ None at this time.
 ### Consul Installation
 * https://devopscube.com/setup-consul-cluster-guide/
 * https://learn.hashicorp.com/tutorials/consul/deployment-guide
+### CTS
+* https://www.consul.io/docs/nia/configuration
+* https://learn.hashicorp.com/tutorials/consul/consul-terraform-sync-secure?in=consul/network-infrastructure-automation#consul-kv-privileges-when-used-as-the-terraform-backend
 
 ## Contributing
 This project is open source.  Please submit your contributions by forking this repository and submitting a pull request!  Oracle appreciates any contributions that are made by the open source community.
