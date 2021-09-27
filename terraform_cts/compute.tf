@@ -725,7 +725,9 @@ resource "oci_core_instance" "web_rgn1" {
   }
   
   provisioner "file" {
-    content     = file("${path.module}/scripts/apache_install.sh")
+    content     = templatefile("${path.module}/scripts/apache_install.sh", {
+      server_ip = self.private_ip
+    })
     destination = "/tmp/apache_install.sh"
     
     connection {

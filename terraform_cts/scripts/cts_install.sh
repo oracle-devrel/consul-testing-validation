@@ -33,10 +33,10 @@ driver "terraform" {
   log = false
   persist_log = false
 
-  backend "consul" {
-    gzip = true
-  }
-  # backend "local" {}
+  # backend "consul" {
+  #   gzip = true
+  # }
+  backend "local" {}
 }
 
 working_dir = "/etc/consul-cts.d/"
