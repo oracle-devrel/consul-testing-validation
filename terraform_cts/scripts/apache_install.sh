@@ -25,7 +25,17 @@ sudo sh -c "cat >> /etc/consul.d/web.json <<'EOF'
     \"id\": \"web\",
     \"name\": \"web\",
     \"tags\": [\"apache\"],
-    \"port\": 80
+    \"port\": 80,
+    \"check\": {
+      \"id\": \"http\",
+      \"name\": \"HTTP check on port 80\",
+      \"http\": \"http://127.0.0.1:80/\",
+      \"tls_server_name\": \"\",
+      \"tls_skip_verify\": false,
+      \"method\": \"GET\",
+      \"interval\": \"10s\",
+      \"timeout\": \"1s\"
+    }
   }
 }
 EOF"
