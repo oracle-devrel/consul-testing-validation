@@ -3,7 +3,7 @@
 [![License: UPL](https://img.shields.io/badge/license-UPL-green)](https://img.shields.io/badge/license-UPL-green)
 
 ## Introduction
-This repository contains a bare-bones environment that runs [Consul](https://www.consul.io), intended to test and validate [Consul](https://www.consul.io) on top of [Oracle Cloud Infrastructure (OCI)](https://www.oracle.com/cloud).
+This repository contains a bare-bones environment that runs [Consul](https://www.consul.io), intended to test and validate [Consul](https://www.consul.io) on top of [Oracle Cloud Infrastructure (OCI)](https://www.oracle.com/cloud?source=:ex:tb:::::WWMK211203P00003&SC=:ex:tb:::::WWMK211203P00003&pcode=WWMK211203P00003).
 
 Here's the topology it deploys:
 
@@ -32,7 +32,7 @@ Once this is running, point your web browser to `http://127.0.0.1:8500`.  If you
 You may visit the LB by going to the public IP in your web browser.  Note that there is no encryption used (this is only a sample, not a production-ready use-case).
 
 ### Prerequisites
-You must have an OCI account.  [Click here](https://www.oracle.com/cloud/free/?source=:ow:o:s:nav::DevoGetStarted&intcmp=:ow:o:s:nav::DevoGetStarted) to create a new cloud account.
+You must have an OCI account.  [Click here](https://www.oracle.com/cloud/free/?source=:ex:tb:::::WWMK211203P00003&SC=:ex:tb:::::WWMK211203P00003&pcode=WWMK211203P00003) to create a new cloud account.
 
 ## Requirements
 
@@ -106,7 +106,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_compartment_ocid"></a> [compartment\_ocid](#input\_compartment\_ocid) | The compartment OCID to deploy resources to | `string` | `""` | no |
 | <a name="input_compute_image_name"></a> [compute\_image\_name](#input\_compute\_image\_name) | The name of the compute image to use for the compute instances. | `any` | n/a | yes |
-| <a name="input_fingerprint"></a> [fingerprint](#input\_fingerprint) | 'API Key' fingerprint, more details can be found at https://docs.cloud.oracle.com/en-us/iaas/Content/General/Concepts/credentials.htm#two | `string` | `""` | no |
+| <a name="input_fingerprint"></a> [fingerprint](#input\_fingerprint) | 'API Key' fingerprint, more details can be found at https://docs.cloud.oracle.com/en-us/iaas/Content/General/Concepts/credentials.htm?source=:ex:tb:::::WWMK211203P00003&SC=:ex:tb:::::WWMK211203P00003&pcode=WWMK211203P00003#two | `string` | `""` | no |
 | <a name="input_lb_priv_key"></a> [lb\_priv\_key](#input\_lb\_priv\_key) | The file name of the private key to use for the LB. | `string` | `"lb.key"` | no |
 | <a name="input_lb_pub_key"></a> [lb\_pub\_key](#input\_lb\_pub\_key) | The file name of the public key to use for the LB. | `string` | `"lb.crt"` | no |
 | <a name="input_my_public_ip"></a> [my\_public\_ip](#input\_my\_public\_ip) | The public IP address of your machine (what is permitted to talk to the LB listener). | `string` | n/a | yes |
@@ -114,15 +114,15 @@ No modules.
 | <a name="input_num_web_svrs"></a> [num\_web\_svrs](#input\_num\_web\_svrs) | The number of web servers to deploy in each region. | `number` | `2` | no |
 | <a name="input_private_key"></a> [private\_key](#input\_private\_key) | The private key (provided as a string value) | `string` | `""` | no |
 | <a name="input_private_key_password"></a> [private\_key\_password](#input\_private\_key\_password) | The password to use for the private key | `string` | `""` | no |
-| <a name="input_private_key_path"></a> [private\_key\_path](#input\_private\_key\_path) | Path to private key used to create OCI 'API Key', more details can be found at https://docs.cloud.oracle.com/en-us/iaas/Content/General/Concepts/credentials.htm#two | `string` | `""` | no |
-| <a name="input_region_1"></a> [region\_1](#input\_region\_1) | OCI Region as documented at https://docs.cloud.oracle.com/en-us/iaas/Content/General/Concepts/regions.htm | `string` | `"us-phoenix-1"` | no |
-| <a name="input_region_2"></a> [region\_2](#input\_region\_2) | OCI Region as documented at https://docs.cloud.oracle.com/en-us/iaas/Content/General/Concepts/regions.htm | `string` | `"us-ashburn-1"` | no |
+| <a name="input_private_key_path"></a> [private\_key\_path](#input\_private\_key\_path) | Path to private key used to create OCI 'API Key', more details can be found at https://docs.cloud.oracle.com/en-us/iaas/Content/General/Concepts/credentials.htm?source=:ex:tb:::::WWMK211203P00003&SC=:ex:tb:::::WWMK211203P00003&pcode=WWMK211203P00003#two | `string` | `""` | no |
+| <a name="input_region_1"></a> [region\_1](#input\_region\_1) | OCI Region as documented at https://docs.cloud.oracle.com/en-us/iaas/Content/General/Concepts/regions.htm?source=:ex:tb:::::WWMK211203P00003&SC=:ex:tb:::::WWMK211203P00003&pcode=WWMK211203P00003 | `string` | `"us-phoenix-1"` | no |
+| <a name="input_region_2"></a> [region\_2](#input\_region\_2) | OCI Region as documented at https://docs.cloud.oracle.com/en-us/iaas/Content/General/Concepts/regions.htm?source=:ex:tb:::::WWMK211203P00003&SC=:ex:tb:::::WWMK211203P00003&pcode=WWMK211203P00003 | `string` | `"us-ashburn-1"` | no |
 | <a name="input_ssh_priv_key"></a> [ssh\_priv\_key](#input\_ssh\_priv\_key) | The contents of the private key used for SSH connections. | `string` | `""` | no |
 | <a name="input_ssh_priv_key_path"></a> [ssh\_priv\_key\_path](#input\_ssh\_priv\_key\_path) | The path to the private key used for SSH connections. | `string` | `""` | no |
 | <a name="input_ssh_pub_key"></a> [ssh\_pub\_key](#input\_ssh\_pub\_key) | The SSH public key contents to use for the compute instances. | `string` | `""` | no |
 | <a name="input_ssh_pub_key_path"></a> [ssh\_pub\_key\_path](#input\_ssh\_pub\_key\_path) | The path to the SSH public key to use for the compute instances. | `string` | `""` | no |
-| <a name="input_tenancy_ocid"></a> [tenancy\_ocid](#input\_tenancy\_ocid) | OCI tenant OCID, more details can be found at https://docs.cloud.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#five | `any` | n/a | yes |
-| <a name="input_user_ocid"></a> [user\_ocid](#input\_user\_ocid) | OCI user OCID, more details can be found at https://docs.cloud.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#five | `string` | `""` | no |
+| <a name="input_tenancy_ocid"></a> [tenancy\_ocid](#input\_tenancy\_ocid) | OCI tenant OCID, more details can be found at https://docs.cloud.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm?source=:ex:tb:::::WWMK211203P00003&SC=:ex:tb:::::WWMK211203P00003&pcode=WWMK211203P00003#five | `any` | n/a | yes |
+| <a name="input_user_ocid"></a> [user\_ocid](#input\_user\_ocid) | OCI user OCID, more details can be found at https://docs.cloud.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm?source=:ex:tb:::::WWMK211203P00003&SC=:ex:tb:::::WWMK211203P00003&pcode=WWMK211203P00003#five | `string` | `""` | no |
 
 ## Outputs
 
